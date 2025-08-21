@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wayfair-catalog
+  namespace: wayfair-dev
+  labels:
+    app: wayfair-catalog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wayfair-catalog
+  template:
+    metadata:
+      labels:
+        app: wayfair-catalog
+    spec:
+      containers:
+        - name: wayfair-catalog
+          image: 015800952701.dkr.ecr.ap-south-1.amazonaws.com/wayfair-catalog:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10

@@ -1,0 +1,13 @@
+---
+- name: Install Docker on Amazon Linux
+  hosts: docker_hosts
+  become: yes
+  tasks:
+    - name: Update packages
+      yum: { name: "*", state: latest }
+    - name: Install docker
+      yum: { name: docker, state: present }
+    - name: Start & enable docker
+      service: { name: docker, state: started, enabled: yes }
+    - name: Add ec2-user to docker group
+      user: { name: ec2-user, groups: docker, append: yes }
